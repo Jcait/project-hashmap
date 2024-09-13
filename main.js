@@ -1,49 +1,4 @@
-class Hashmap {
-  constructor() {
-    this.bucket = new Array(16);
-  }
-
-  hash(key) {
-    let hashCode = 0;
-
-    const primeNumber = 31;
-    for (let i = 0; i < key.length; i++) {
-      hashCode = primeNumber * hashCode + key.charCodeAt(i);
-      hashCode = hashCode % 16;
-    }
-    return hashCode;
-  }
-  set(key, value) {
-    const pair = new node(key, value);
-    const list = new LinkedList();
-    let index = this.hash(key);
-
-    if (!this.bucket[index]) {
-      this.bucket[index] = list;
-      list.append(pair);
-    }
-  }
-  //   has(key) {
-  //     for (i = 0; i < this.bucket.length; i++) {
-  //       if (index < 0 || index >= buckets.length) {
-  //         throw new Error("Trying to access index out of bound");
-  //       } else if ((this.bucket[i] = key)) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     }
-  //   }
-}
-class Node {
-  constructor(key, value) {
-    this.key = key;
-    this.value = value;
-    this.nextNode = null;
-  }
-}
-
-class LinkedList {
+export default class LinkedList {
   constructor() {
     this.head = null;
   }
@@ -153,5 +108,12 @@ class LinkedList {
       }
     }
     return string;
+  }
+}
+
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.nextNode = null;
   }
 }
