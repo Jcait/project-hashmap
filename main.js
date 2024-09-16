@@ -1,4 +1,4 @@
-export default class LinkedList {
+class LinkedList {
   constructor() {
     this.head = null;
   }
