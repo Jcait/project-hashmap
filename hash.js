@@ -47,7 +47,25 @@ class HashMap {
       return null;
     }
   }
+  has(key) {
+    let index = this.hash(key);
+    if (this.buckets[index].head.key == key) {
+      return true;
+    } else if (
+      this.buckets[index].head.key != key &&
+      this.buckets[index].head.nextNode
+    ) {
+      if (this.buckets[index].match(key)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }
+
 // check if the current key match
 // if not it has to iterate through the nodes untill it's found
 
