@@ -64,6 +64,21 @@ class HashMap {
       return false;
     }
   }
+  remove(key) {
+    let index = this.hash(key);
+    if (this.buckets[index].head.key == key) {
+      console.log("Head match");
+      this.buckets[index] = this.buckets[index].head.nextNode;
+    } else if (
+      this.buckets[index].head.key != key &&
+      this.buckets[index].head.nextNode
+    ) {
+      console.log("No head match");
+      this.buckets[index].delMatch(key);
+    } else {
+      return false;
+    }
+  }
 }
 
 // check if the current key match
@@ -135,6 +150,25 @@ class LinkedList {
         console.log("Match Not Found");
         current = current.nextNode;
       }
+    }
+  }
+  delMatch(key) {
+    console.log("delMatch triggered");
+    let prev = this.head;
+    let current = prev.nextNode;
+    while (prev.nextNode) {
+      console.log(current);
+      console.log(current.key);
+      console.log(key);
+      if (current.key == key) {
+        console.log("Match");
+        prev.nextNode = current.nextNode;
+      } else if (current.nextNode.key == key && !current.nextNode.nextNode) {
+        console.log("nextMode Match");
+        current.nextNode = null;
+      }
+      prev = current;
+      current = prev.nextNode;
     }
   }
 }
