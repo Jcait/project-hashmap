@@ -79,6 +79,15 @@ class HashMap {
       return false;
     }
   }
+  length() {
+    let count = 0;
+    this.buckets.forEach((data) => {
+      if (data) {
+        count += data.size;
+      }
+    });
+    return count;
+  }
 }
 
 // check if the current key match
@@ -87,6 +96,7 @@ class HashMap {
 class LinkedList {
   constructor(key, value) {
     this.head = null;
+    this.size = 1;
   }
   append(key, value) {
     const node = new Node(key, value);
@@ -127,10 +137,12 @@ class LinkedList {
           } else if (!current.nextNode && !changedKey) {
             console.log("no changed key");
             current.nextNode = node;
+            this.size++;
           }
         }
       } else {
         current.nextNode = node;
+        this.size++;
       }
     } else {
       console.log("Match");
@@ -163,9 +175,11 @@ class LinkedList {
       if (current.key == key) {
         console.log("Match");
         prev.nextNode = current.nextNode;
+        this.size--;
       } else if (current.nextNode.key == key && !current.nextNode.nextNode) {
         console.log("nextMode Match");
         current.nextNode = null;
+        this.size--;
       }
       prev = current;
       current = prev.nextNode;
@@ -180,3 +194,16 @@ class Node {
     this.nextNode = null;
   }
 }
+const test = new HashMap();
+test.set("apple", "red");
+test.set("banana", "yellow");
+test.set("carrot", "orange");
+test.set("dog", "brown");
+test.set("elephant", "gray");
+test.set("frog", "green");
+test.set("grape", "purple");
+test.set("hat", "black");
+test.set("ice cream", "white");
+test.set("jacket", "blue");
+test.set("kite", "pink");
+test.set("lion", "golden");
