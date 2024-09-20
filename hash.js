@@ -2,6 +2,8 @@ class HashMap {
   constructor() {
     this.buckets = new Array(this.capacity);
     this.capacity = 16;
+    this.filledBuckets = 0;
+    this.loadfactor = 0.75;
   }
   hash(key) {
     let hashCode = 0;
@@ -15,11 +17,40 @@ class HashMap {
     return hashCode;
   }
 
+  checkSize() {
+    if (this.filledBuckets >= this.capacity * this.loadfactor) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  growHash() {
+    this.filledBuckets = 0;
+    this.capacity *= 2;
+    let list = [];
+    this.buckets.forEach((entry) => {
+      if (entry) {
+        entry.arrEntryAdd(list);
+      }
+    });
+    this.clear();
+    list.forEach((data) => {
+      let key = data[0];
+      let value = data[1];
+      this.set(key, value);
+    });
+  }
+
   set(key = "testKey", value = "testValue") {
+    if (this.checkSize()) {
+      this.growHash();
+    }
     let index = this.hash(key);
     if (!this.buckets[index]) {
       this.buckets[index] = new LinkedList();
       this.buckets[index].append(key, value);
+      this.filledBuckets++;
       console.log(`${index}, ${this.buckets[index].head.key}`);
     } else if (this.buckets[index]) {
       console.log("collider");
@@ -66,17 +97,18 @@ class HashMap {
   }
   remove(key) {
     let index = this.hash(key);
-    if (this.buckets[index].head.key == key) {
+    if (!this.buckets[index]) {
+      return false;
+    } else if (this.buckets[index].head.key == key) {
       console.log("Head match");
       this.buckets[index] = this.buckets[index].head.nextNode;
+      this.filledBuckets--;
     } else if (
       this.buckets[index].head.key != key &&
       this.buckets[index].head.nextNode
     ) {
       console.log("No head match");
       this.buckets[index].delMatch(key);
-    } else {
-      return false;
     }
   }
   length() {
@@ -87,6 +119,36 @@ class HashMap {
       }
     });
     return count;
+  }
+  clear() {
+    this.buckets = new Array(this.capacity);
+  }
+  keys() {
+    let list = [];
+    this.buckets.forEach((key) => {
+      if (key) {
+        key.arrKeyAdd(list);
+      }
+    });
+    return list;
+  }
+  values() {
+    let list = [];
+    this.buckets.forEach((value) => {
+      if (value) {
+        value.arrValueAdd(list);
+      }
+    });
+    return list;
+  }
+  entries() {
+    let list = [];
+    this.buckets.forEach((entry) => {
+      if (entry) {
+        entry.arrEntryAdd(list);
+      }
+    });
+    return list;
   }
 }
 
@@ -175,14 +237,41 @@ class LinkedList {
       if (current.key == key) {
         console.log("Match");
         prev.nextNode = current.nextNode;
-        this.size--;
       } else if (current.nextNode.key == key && !current.nextNode.nextNode) {
         console.log("nextMode Match");
         current.nextNode = null;
-        this.size--;
+      } else {
+        return false;
       }
       prev = current;
       current = prev.nextNode;
+    }
+  }
+  arrKeyAdd(arr) {
+    let current = this.head;
+    arr.push(current.key);
+    while (current.nextNode) {
+      current = current.nextNode;
+      arr.push(current.key);
+    }
+  }
+  arrValueAdd(arr) {
+    let current = this.head;
+    arr.push(current.value);
+    while (current.nextNode) {
+      current = current.nextNode;
+      arr.push(current.value);
+    }
+  }
+
+  arrEntryAdd(arr) {
+    let current = this.head;
+    let entryArr = new Array(current.key, current.value);
+    arr.push(entryArr);
+    while (current.nextNode) {
+      current = current.nextNode;
+      entryArr = new Array(current.key, current.value);
+      arr.push(entryArr);
     }
   }
 }
